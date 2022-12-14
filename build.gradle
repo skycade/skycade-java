@@ -4,7 +4,7 @@ plugins {
 }
 
 project.ext.version = '1.0.0-SNAPSHOT'
-project.ext.package = 'net.skycade.api'
+project.ext.package = 'net.skycade.gameapi'
 
 group 'net.skycade'
 version project.ext.version
@@ -21,7 +21,7 @@ dependencies {
 
 
 shadowJar {
-    archiveBaseName.set('skycade-api')
+    archiveBaseName.set('skycade-game-api')
     archiveClassifier.set('')
     archiveVersion.set(project.ext.version)
 
