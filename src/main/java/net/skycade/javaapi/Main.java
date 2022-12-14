@@ -1,4 +1,4 @@
-package net.skycade.gameapi;
+package net.skycade.javaapi;
 
 /**
  * Main class of the API.

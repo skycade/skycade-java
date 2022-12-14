@@ -1,5 +1,5 @@
-# skycade-game-api
-Skycade's official plugin API that is the building block of all plugins produced in-house
+# skycade-java-api
+Skycade's official Java API that is the building block of all software (plugins, runtimes) produced in-house
 
 -------
 

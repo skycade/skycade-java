@@ -4,7 +4,7 @@ plugins {
 }
 
 project.ext.version = '1.0.0-SNAPSHOT'
-project.ext.package = 'net.skycade.gameapi'
+project.ext.package = 'net.skycade.javaapi'
 
 group 'net.skycade'
 version project.ext.version
@@ -14,16 +14,12 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.typesafe/config
-    implementation 'com.typesafe:config:1.4.2'
 }
 
 
 
 shadowJar {
-    archiveBaseName.set('skycade-game-api')
+    archiveBaseName.set('skycade-java-api')
     archiveClassifier.set('')
     archiveVersion.set(project.ext.version)
-
-    relocate 'com.typesafe', "${project.ext.package}.relocated.com.typesafe"
 }
