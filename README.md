@@ -1,4 +1,4 @@
-# api
+# skycade-game-api
 Skycade's official plugin API that is the building block of all plugins produced in-house
 
 -------
