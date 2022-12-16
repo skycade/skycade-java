@@ -1,4 +1,4 @@
-package net.skycade.java.api;
+package net.skycade.java.backend;
 
 public class Main {
   public static void main(String[] args) {
