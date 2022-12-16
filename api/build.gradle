@@ -1,0 +1,17 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+}
+
+shadowJar {
+    archiveBaseName.set("${project.ext.name}-api-${project.ext.buildVersion}")
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}

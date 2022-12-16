@@ -1,25 +1,16 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'java'
+    id "java"
 }
 
-project.ext.version = '1.0.0-SNAPSHOT'
-project.ext.package = 'net.skycade.javaapi'
+subprojects {
 
-group 'net.skycade'
-version project.ext.version
+    group = 'net.skycade.java'
+    version = '1.0.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-}
+    project.ext.name = 'skycade-java'
+    project.ext.buildVersion = project.version
 
-dependencies {
-}
-
-
-
-shadowJar {
-    archiveBaseName.set('skycade-java-api')
-    archiveClassifier.set('')
-    archiveVersion.set(project.ext.version)
+    repositories {
+        mavenCentral()
+    }
 }

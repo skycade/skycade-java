@@ -1,2 +1,9 @@
-rootProject.name = 'skycade-java-api'
+pluginManagement {
+    plugins {
+        id "com.github.johnrengelman.shadow" version "7.1.2"
+        id "java"
+    }
+}
 
+rootProject.name = 'skycade-java'
+include 'api'
