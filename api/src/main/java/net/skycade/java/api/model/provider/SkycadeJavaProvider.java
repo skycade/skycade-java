@@ -1,4 +1,4 @@
-package net.skycade.java.api.model;
+package net.skycade.java.api.model.provider;
 
 /**
  * @param <T> the type of the model

@@ -15,8 +15,7 @@ import org.redisson.api.listener.MessageListener;
  * if so, the packet can be handled correctly. We can also modify the packet before it is handled
  * by the handler.
  */
-public class RedisPacketHandlerInterceptor<T extends RedisPacket>
-    implements MessageListener<T> {
+public class RedisPacketHandlerInterceptor<T extends RedisPacket> implements MessageListener<T> {
 
   /**
    * The redis service provider.
@@ -55,6 +54,8 @@ public class RedisPacketHandlerInterceptor<T extends RedisPacket>
     if (handler != null) {
       // handle the packet.
       handler.handle(msg);
+      // remove the packet from the cache.
+      serviceProvider.responseCache().remove(((RedisResponsePacket) msg).respondingToId());
     } else {
       // print an error that the packet is a response to a previous packet, but the packet
       // was not found in the cache.

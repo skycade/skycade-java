@@ -1,7 +1,7 @@
 package net.skycade.java.api.redis;
 
 import net.skycade.java.api.config.RedissonClientConfiguration;
-import net.skycade.java.api.model.SkycadeJavaProviderObjectLoader;
+import net.skycade.java.api.model.provider.SkycadeJavaProviderObjectLoader;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;

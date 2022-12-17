@@ -1,7 +1,11 @@
 package net.skycade.java.api.redis.packet.response;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import net.jodah.expiringmap.ExpirationPolicy;
+import net.jodah.expiringmap.ExpiringMap;
 import net.skycade.java.api.redis.handler.RedisPacketHandler;
 import net.skycade.java.api.redis.packet.RedisPacket;
 
@@ -18,7 +22,7 @@ public final class PacketResponseCache {
   /**
    * The cache.
    */
-  private final WeakConcurrentHashMap<UUID, RedisPacketHandler<?>> cache;
+  private final ExpiringMap<UUID, RedisPacketHandler<?>> cache;
 
   /**
    * Constructor.
@@ -26,7 +30,8 @@ public final class PacketResponseCache {
    * @param expirationDuration the duration after which a packet will expire.
    */
   public PacketResponseCache(Duration expirationDuration) {
-    this.cache = new WeakConcurrentHashMap<>(expirationDuration);
+    this.cache = ExpiringMap.builder().expirationPolicy(ExpirationPolicy.CREATED)
+        .expiration(expirationDuration.toMillis(), TimeUnit.MILLISECONDS).build();
   }
 
   /**
@@ -47,5 +52,14 @@ public final class PacketResponseCache {
    */
   public <T extends RedisPacket> RedisPacketHandler<T> get(UUID id) {
     return (RedisPacketHandler<T>) cache.get(id);
+  }
+
+  /**
+   * Removes a handler from the cache.
+   *
+   * @param id the id of the handler.
+   */
+  public void remove(UUID id) {
+    cache.remove(id);
   }
 }

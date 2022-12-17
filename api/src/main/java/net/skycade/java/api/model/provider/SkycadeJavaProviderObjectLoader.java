@@ -1,4 +1,4 @@
-package net.skycade.java.api.model;
+package net.skycade.java.api.model.provider;
 
 /**
  * Represents a provider of a loader for an object.

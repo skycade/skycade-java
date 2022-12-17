@@ -103,6 +103,7 @@ public class RedisServiceProvider {
    * Publishes a packet to the Redis server.
    *
    * @param packet the packet to publish.
+   * @return the result of the publish operation.
    */
   public long publish(RedisPacket packet) {
     return this.redissonClientProvider.get().getTopic(packet.key().build()).publish(packet);
@@ -112,6 +113,7 @@ public class RedisServiceProvider {
    * Publishes a packet to the Redis server asynchronously.
    *
    * @param packet the packet to publish.
+   * @return a future representing the result of the publish operation.
    */
   public RFuture<Long> publishAsync(RedisPacket packet) {
     return this.redissonClientProvider.get().getTopic(packet.key().build()).publishAsync(packet);
@@ -122,10 +124,11 @@ public class RedisServiceProvider {
    *
    * @param packet  the packet to publish.
    * @param handler the handler for the response.
+   * @return the result of the publish operation.
    */
-  public <T extends RedisPacket> void publish(RedisPacket packet, RedisPacketHandler<T> handler) {
+  public <T extends RedisPacket> long publish(RedisPacket packet, RedisPacketHandler<T> handler) {
     this.responseCache().put(packet.packetId(), handler);
-    this.publish(packet);
+    return this.publish(packet);
   }
 
   /**
@@ -133,10 +136,11 @@ public class RedisServiceProvider {
    *
    * @param packet  the packet to publish.
    * @param handler the handler for the response.
+   * @return a future representing the result of the publish operation.
    */
-  public <T extends RedisPacket> void publishAsync(RedisPacket packet,
-                                                   RedisPacketHandler<T> handler) {
+  public <T extends RedisPacket> RFuture<Long> publishAsync(RedisPacket packet,
+                                                            RedisPacketHandler<T> handler) {
     this.responseCache().put(packet.packetId(), handler);
-    this.publishAsync(packet);
+    return this.publishAsync(packet);
   }
 }
