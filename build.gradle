@@ -3,7 +3,6 @@ plugins {
 }
 
 subprojects {
-
     group = 'net.skycade.java'
     version = '1.0.0-SNAPSHOT'
 

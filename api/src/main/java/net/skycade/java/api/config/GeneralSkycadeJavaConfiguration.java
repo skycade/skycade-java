@@ -1,6 +1,7 @@
 package net.skycade.java.api.config;
 
 import java.util.UUID;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 /**
  * The general server configuration that contains all the information about the server.
@@ -12,6 +13,7 @@ import java.util.UUID;
  * <p>
  * TODO: Add more configuration options (redis, gRPC, etc.).
  */
+@ConfigSerializable
 public class GeneralSkycadeJavaConfiguration {
 
   /**
@@ -25,14 +27,22 @@ public class GeneralSkycadeJavaConfiguration {
   private final String serverName;
 
   /**
+   * The redisson client configuration.
+   */
+  private final RedissonClientConfiguration redissonClientConfiguration;
+
+  /**
    * The constructor.
    *
-   * @param serverId   The server's unique identifier.
-   * @param serverName The server's name.
+   * @param serverId                    The server's unique identifier.
+   * @param serverName                  The server's name.
+   * @param redissonClientConfiguration The redisson client configuration.
    */
-  public GeneralSkycadeJavaConfiguration(UUID serverId, String serverName) {
+  public GeneralSkycadeJavaConfiguration(UUID serverId, String serverName,
+                                         RedissonClientConfiguration redissonClientConfiguration) {
     this.serverId = serverId;
     this.serverName = serverName;
+    this.redissonClientConfiguration = redissonClientConfiguration;
   }
 
   /**
@@ -51,5 +61,14 @@ public class GeneralSkycadeJavaConfiguration {
    */
   public String getServerName() {
     return serverName;
+  }
+
+  /**
+   * Gets the redisson client configuration.
+   *
+   * @return The redisson client configuration.
+   */
+  public RedissonClientConfiguration getRedissonClientConfiguration() {
+    return redissonClientConfiguration;
   }
 }

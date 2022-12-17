@@ -8,6 +8,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.redisson:redisson:3.19.0'
+    implementation 'org.spongepowered:configurate-core:4.1.2'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.2'
 }
 
 shadowJar {

@@ -1,19 +1,18 @@
 plugins {
+    id 'com.github.johnrengelman.shadow'
     id 'java'
 }
-
-group 'net.skycade.java.backend'
-version 'unspecified'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation project(':api')
 }
 
-test {
-    useJUnitPlatform()
+shadowJar {
+    archiveBaseName.set("${project.ext.name}-backend-${project.ext.buildVersion}")
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }
