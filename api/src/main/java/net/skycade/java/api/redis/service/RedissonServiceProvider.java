@@ -1,21 +1,23 @@
-package net.skycade.java.api.redis;
+package net.skycade.java.api.redis.service;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import net.skycade.java.api.model.provider.SkycadeJavaProvider;
+import net.skycade.java.api.redis.handler.RedisPacketHandler;
 import net.skycade.java.api.redis.handler.middleware.RedisPacketHandlerInterceptor;
 import net.skycade.java.api.redis.packet.RedisPacket;
 import net.skycade.java.api.redis.packet.response.PacketResponseCache;
 import net.skycade.java.api.redis.packet.topic.RedisPacketKey;
 import net.skycade.java.api.redis.packet.topic.TopicKey;
-import net.skycade.java.api.redis.handler.RedisPacketHandler;
 import org.redisson.api.RFuture;
+import org.redisson.api.RedissonClient;
 
-public class RedisServiceProvider {
+public class RedissonServiceProvider extends RedisServiceProvider {
 
   /**
    * The Redisson client provider.
    */
-  private final RedissonClientProvider redissonClientProvider;
+  private final SkycadeJavaProvider<RedissonClient> redissonClientProvider;
 
   /**
    * The target identifier for global targeted packets.
@@ -33,14 +35,14 @@ public class RedisServiceProvider {
   private final PacketResponseCache responseCache;
 
   /**
-   * Constructs a new {@link RedisServiceProvider} instance.
+   * Constructs a new {@link RedissonServiceProvider} instance.
    *
    * @param redissonClientProvider the Redisson client provider.
    * @param globalTargetKey        the target identifier for global targeted packets.
    * @param serverTargetKey        the target identifier for local targeted packets.
    */
-  public RedisServiceProvider(RedissonClientProvider redissonClientProvider,
-                              TopicKey globalTargetKey, TopicKey serverTargetKey) {
+  public RedissonServiceProvider(SkycadeJavaProvider<RedissonClient> redissonClientProvider,
+                                 TopicKey globalTargetKey, TopicKey serverTargetKey) {
     this.redissonClientProvider = redissonClientProvider;
     this.globalTargetKey = globalTargetKey;
     this.serverTargetKey = serverTargetKey;
@@ -49,20 +51,21 @@ public class RedisServiceProvider {
   }
 
   /**
-   * Constructs a new {@link RedisServiceProvider} instance.
+   * Constructs a new {@link RedissonServiceProvider} instance.
    *
    * @param redissonClientProvider the Redisson client provider.
    * @param globalTargetId         the target identifier for global targeted packets.
    * @param serverTargetId         the target identifier for local targeted packets.
    */
-  public RedisServiceProvider(RedissonClientProvider redissonClientProvider, String globalTargetId,
-                              String serverTargetId) {
+  public RedissonServiceProvider(SkycadeJavaProvider<RedissonClient> redissonClientProvider,
+                                 String globalTargetId, String serverTargetId) {
     this(redissonClientProvider, new TopicKey(globalTargetId), new TopicKey(serverTargetId));
   }
 
   /**
    * Gets the response cache.
    */
+  @Override
   public PacketResponseCache responseCache() {
     return responseCache;
   }
@@ -76,6 +79,7 @@ public class RedisServiceProvider {
    * @param handler the handler for the packet.
    * @param <T>     the type of the packet.
    */
+  @Override
   protected <T extends RedisPacket> void listenForDirectPacket(TopicKey channel,
                                                                RedisPacketHandler<T> handler) {
     this.redissonClientProvider.get()
@@ -91,6 +95,7 @@ public class RedisServiceProvider {
    * @param handler the handler for the packet.
    * @param <T>     the type of the packet.
    */
+  @Override
   protected <T extends RedisPacket> void listenForGlobalPacket(TopicKey channel,
                                                                RedisPacketHandler<T> handler) {
     this.redissonClientProvider.get()
@@ -105,6 +110,7 @@ public class RedisServiceProvider {
    * @param packet the packet to publish.
    * @return the result of the publish operation.
    */
+  @Override
   public long publish(RedisPacket packet) {
     return this.redissonClientProvider.get().getTopic(packet.key().build()).publish(packet);
   }
@@ -115,6 +121,7 @@ public class RedisServiceProvider {
    * @param packet the packet to publish.
    * @return a future representing the result of the publish operation.
    */
+  @Override
   public RFuture<Long> publishAsync(RedisPacket packet) {
     return this.redissonClientProvider.get().getTopic(packet.key().build()).publishAsync(packet);
   }
@@ -126,6 +133,7 @@ public class RedisServiceProvider {
    * @param handler the handler for the response.
    * @return the result of the publish operation.
    */
+  @Override
   public <T extends RedisPacket> long publish(RedisPacket packet, RedisPacketHandler<T> handler) {
     this.responseCache().put(packet.packetId(), handler);
     return this.publish(packet);
@@ -138,6 +146,7 @@ public class RedisServiceProvider {
    * @param handler the handler for the response.
    * @return a future representing the result of the publish operation.
    */
+  @Override
   public <T extends RedisPacket> RFuture<Long> publishAsync(RedisPacket packet,
                                                             RedisPacketHandler<T> handler) {
     this.responseCache().put(packet.packetId(), handler);

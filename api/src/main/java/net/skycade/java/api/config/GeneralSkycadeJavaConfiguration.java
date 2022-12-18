@@ -29,7 +29,7 @@ public class GeneralSkycadeJavaConfiguration {
   /**
    * The redisson client configuration.
    */
-  private final RedissonClientConfiguration redissonClientConfiguration;
+  private final RedissonClientConfiguration redissonConfiguration;
 
   /**
    * The constructor.
@@ -42,7 +42,14 @@ public class GeneralSkycadeJavaConfiguration {
                                          RedissonClientConfiguration redissonClientConfiguration) {
     this.serverId = serverId;
     this.serverName = serverName;
-    this.redissonClientConfiguration = redissonClientConfiguration;
+    this.redissonConfiguration = redissonClientConfiguration;
+  }
+
+  /**
+   * The default constructor.
+   */
+  public GeneralSkycadeJavaConfiguration() {
+    this(UUID.randomUUID(), "Default Server", new RedissonClientConfiguration());
   }
 
   /**
@@ -50,7 +57,7 @@ public class GeneralSkycadeJavaConfiguration {
    *
    * @return The server's unique identifier.
    */
-  public UUID getServerId() {
+  public UUID serverId() {
     return serverId;
   }
 
@@ -59,7 +66,7 @@ public class GeneralSkycadeJavaConfiguration {
    *
    * @return The server's name.
    */
-  public String getServerName() {
+  public String serverName() {
     return serverName;
   }
 
@@ -68,7 +75,7 @@ public class GeneralSkycadeJavaConfiguration {
    *
    * @return The redisson client configuration.
    */
-  public RedissonClientConfiguration getRedissonClientConfiguration() {
-    return redissonClientConfiguration;
+  public RedissonClientConfiguration redissonConfiguration() {
+    return redissonConfiguration;
   }
 }

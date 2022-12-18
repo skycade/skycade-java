@@ -32,9 +32,9 @@ public final class RedissonClientConfiguration {
   private final String allServersTargetId;
 
   /**
-   * The id for the redis channel/target id that is used to send packets to THIS server only.
+   * If the client is enabled.
    */
-  private final String thisServerTargetId;
+  private final boolean enableRedisson;
 
   /**
    * Constructs a new {@link RedissonClientConfiguration} instance.
@@ -43,14 +43,21 @@ public final class RedissonClientConfiguration {
    *                           (e.g. {@code localhost:6379})
    * @param clientName         the name of the client
    * @param allServersTargetId the id for the redis channel/target id that is used to send packets to all servers
-   * @param thisServerTargetId the id for the redis channel/target id that is used to send packets to THIS server only
+   * @param enableRedisson     if the client is enabled
    */
   public RedissonClientConfiguration(String address, String clientName, String allServersTargetId,
-                                     String thisServerTargetId) {
+                                     boolean enableRedisson) {
     this.address = address;
     this.clientName = clientName;
     this.allServersTargetId = allServersTargetId;
-    this.thisServerTargetId = thisServerTargetId;
+    this.enableRedisson = enableRedisson;
+  }
+
+  /**
+   * The default constructor.
+   */
+  public RedissonClientConfiguration() {
+    this("localhost:6379", "Default Client", "all", false);
   }
 
   /**
@@ -81,11 +88,11 @@ public final class RedissonClientConfiguration {
   }
 
   /**
-   * Returns the id for the redis channel/target id that is used to send packets to THIS server only.
+   * Returns if the client is enabled.
    *
-   * @return the id for the redis channel/target id that is used to send packets to THIS server only
+   * @return if the client is enabled
    */
-  public String thisServerTargetId() {
-    return this.thisServerTargetId;
+  public boolean redissonEnabled() {
+    return this.enableRedisson;
   }
 }

@@ -1,7 +1,7 @@
 package net.skycade.java.api.redis.handler.middleware;
 
 import net.skycade.java.api.SkycadeJavaBootstrapper;
-import net.skycade.java.api.redis.RedisServiceProvider;
+import net.skycade.java.api.redis.service.RedissonServiceProvider;
 import net.skycade.java.api.redis.handler.RedisPacketHandler;
 import net.skycade.java.api.redis.packet.RedisPacket;
 import net.skycade.java.api.redis.packet.response.RedisResponsePacket;
@@ -20,7 +20,7 @@ public class RedisPacketHandlerInterceptor<T extends RedisPacket> implements Mes
   /**
    * The redis service provider.
    */
-  private final RedisServiceProvider serviceProvider;
+  private final RedissonServiceProvider serviceProvider;
 
   /**
    * The next handler in the chain.
@@ -33,7 +33,7 @@ public class RedisPacketHandlerInterceptor<T extends RedisPacket> implements Mes
    * @param serviceProvider the redis service provider.
    * @param next            the next middleware.
    */
-  public RedisPacketHandlerInterceptor(RedisServiceProvider serviceProvider,
+  public RedisPacketHandlerInterceptor(RedissonServiceProvider serviceProvider,
                                        RedisPacketHandler<T> next) {
     this.serviceProvider = serviceProvider;
     this.next = next;

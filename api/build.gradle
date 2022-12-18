@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     implementation 'org.redisson:redisson:3.19.0'
-    implementation 'org.spongepowered:configurate-core:4.1.2'
+    implementation 'org.spongepowered:configurate-hocon:4.1.2'
     implementation 'net.jodah:expiringmap:0.5.10'
 }
 

@@ -2,10 +2,17 @@ package net.skycade.java.api;
 
 import static net.skycade.java.api.redis.RedisConstants.setAllServersTargetId;
 
+import java.nio.file.Path;
+import net.skycade.java.api.config.ConfigurationLoader;
 import net.skycade.java.api.config.GeneralSkycadeJavaConfiguration;
-import net.skycade.java.api.redis.RedisServiceProvider;
-import net.skycade.java.api.redis.RedissonClientLoader;
-import net.skycade.java.api.redis.RedissonClientProvider;
+import net.skycade.java.api.model.provider.SkycadeJavaProvider;
+import net.skycade.java.api.redis.client.EmptyRedissonClientProvider;
+import net.skycade.java.api.redis.client.RedissonClientLoader;
+import net.skycade.java.api.redis.client.RedissonClientProvider;
+import net.skycade.java.api.redis.service.EmptyRedisServiceProvider;
+import net.skycade.java.api.redis.service.RedisServiceProvider;
+import net.skycade.java.api.redis.service.RedissonServiceProvider;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,55 +24,51 @@ public class SkycadeJavaBootstrapper {
   public static final Logger LOGGER = LoggerFactory.getLogger(SkycadeJavaBootstrapper.class);
 
   /**
-   * The Redisson client provider.
+   * The skycade-java api object.
    */
-  private final RedissonClientProvider redissonClientProvider;
-
-  /**
-   * The Redis service provider.
-   */
-  private final RedisServiceProvider redisServiceProvider;
+  private final SkycadeJavaApi skycadeJavaApi;
 
   /**
    * Constructs a new {@link SkycadeJavaBootstrapper} instance.
-   *
-   * @param configuration the general server configuration instance. This is used to load the Redisson client
-   *                      <p> and contains information about the server that's being started. It is also used to
-   *                      connect to the other parts of the network and Skycade's database, as well as
-   *                      other APIs.</p>
    */
-  public SkycadeJavaBootstrapper(GeneralSkycadeJavaConfiguration configuration) {
+  public SkycadeJavaBootstrapper() {
     // The general server configuration that contains all the information about the server.
     // This information is used to connect to the Skycade API and provide other parts
     // of the network information about the current server instance.
-    this.redissonClientProvider = new RedissonClientProvider(
-        new RedissonClientLoader(configuration.getRedissonClientConfiguration()));
+    GeneralSkycadeJavaConfiguration configuration =
+        new ConfigurationLoader<>(Path.of("skycade-java.conf"),
+            GeneralSkycadeJavaConfiguration.class, this.getClass()).config();
+
+    SkycadeJavaProvider<RedissonClient> redissonClientProvider;
+    RedisServiceProvider redisServiceProvider;
+
+    if (configuration.redissonConfiguration().redissonEnabled()) {
+      redissonClientProvider = new RedissonClientProvider(
+          new RedissonClientLoader(configuration.redissonConfiguration()));
+
+      // The Redis service provider.
+      redisServiceProvider = new RedissonServiceProvider(redissonClientProvider,
+          configuration.redissonConfiguration().allServersTargetId(),
+          configuration.serverId().toString());
+    } else {
+      redissonClientProvider = new EmptyRedissonClientProvider();
+      redisServiceProvider = new EmptyRedisServiceProvider();
+    }
+
+    // The skycade-java api object.
+    this.skycadeJavaApi = new SkycadeJavaApi(redissonClientProvider, redisServiceProvider);
 
     // set the channel id used to send packets to all servers
     // yes, this is a hack, but it's a hack that works
-    setAllServersTargetId(configuration.getRedissonClientConfiguration().allServersTargetId());
-
-    // The Redis service provider.
-    this.redisServiceProvider = new RedisServiceProvider(this.redissonClientProvider,
-        configuration.getRedissonClientConfiguration().allServersTargetId(),
-        configuration.getRedissonClientConfiguration().thisServerTargetId());
+    setAllServersTargetId(configuration.redissonConfiguration().allServersTargetId());
   }
 
   /**
-   * Gets the Redisson client provider.
+   * Gets the skycade-java api object.
    *
-   * @return the Redisson client provider
+   * @return the skycade-java api object
    */
-  public RedissonClientProvider redissonClientProvider() {
-    return this.redissonClientProvider;
-  }
-
-  /**
-   * Gets the Redis service provider.
-   *
-   * @return the Redis service provider
-   */
-  public RedisServiceProvider redisServiceProvider() {
-    return this.redisServiceProvider;
+  public SkycadeJavaApi skycadeJavaApi() {
+    return this.skycadeJavaApi;
   }
 }

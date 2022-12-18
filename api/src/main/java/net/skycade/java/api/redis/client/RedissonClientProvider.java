@@ -1,4 +1,4 @@
-package net.skycade.java.api.redis;
+package net.skycade.java.api.redis.client;
 
 import net.skycade.java.api.model.provider.SkycadeJavaProvider;
 import org.redisson.api.RedissonClient;
